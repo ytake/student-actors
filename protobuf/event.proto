@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package protobuf;
+
+option go_package = "github.com/ytake/student-actors/message";
+
+message BeginClassRequest {
+  string subject = 1;
+}
+
+message HomeworkRequest {
+  string subject = 1;
+}
+
+message SubmittedHomework {
+  string subject = 1;
+}
