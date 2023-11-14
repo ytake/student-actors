@@ -1,24 +1,25 @@
 package classroom
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/asynkron/protoactor-go/actor"
 	"github.com/ytake/student-actors/message"
 )
 
 // Actor represents a classroom
 type Actor struct {
-	teacher  *actor.PID
-	students []*actor.PID
+	pipe          *actor.PID
+	teacher       *actor.PID
+	students      []*actor.PID
+	endOfHomework []string
 }
 
-func NewActor(teacher *actor.PID, students []*actor.PID) func() actor.Actor {
+func NewActor(pipe *actor.PID, teacher *actor.PID, students []*actor.PID) func() actor.Actor {
 	return func() actor.Actor {
 		return &Actor{
-			teacher:  teacher,
-			students: students,
+			pipe:          pipe,
+			teacher:       teacher,
+			students:      students,
+			endOfHomework: []string{},
 		}
 	}
 }
@@ -27,12 +28,18 @@ func NewActor(teacher *actor.PID, students []*actor.PID) func() actor.Actor {
 func (state *Actor) Receive(context actor.Context) {
 	switch msg := context.Message().(type) {
 	case *message.BeginClassRequest:
-		f := context.RequestFuture(state.teacher, msg, 2*time.Second)
-		r, err := f.Result()
-		if err != nil {
-			context.Stop(context.Self())
+		context.Request(state.teacher, msg)
+	case *message.AchievementTestRequest:
+		for _, student := range state.students {
+			context.Request(student, msg)
 		}
-		fmt.Println(r)
-		fmt.Println(state.students)
+	case *message.SubmittedAchievementTest:
+		endOfHomework := append(state.endOfHomework, msg.Name)
+		if len(endOfHomework) == len(state.students) {
+			context.Send(state.pipe, &message.EndOfAchievementTest{Subject: msg.Subject})
+			context.Poison(context.Self())
+		} else {
+			state.endOfHomework = endOfHomework
+		}
 	}
 }

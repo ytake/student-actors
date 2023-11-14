@@ -8,10 +8,15 @@ message BeginClassRequest {
   string subject = 1;
 }
 
-message HomeworkRequest {
+message AchievementTestRequest {
   string subject = 1;
 }
 
-message SubmittedHomework {
+message SubmittedAchievementTest {
+  string subject = 1;
+  string name = 2;
+}
+
+message EndOfAchievementTest {
   string subject = 1;
 }
