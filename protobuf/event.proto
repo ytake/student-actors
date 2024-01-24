@@ -17,6 +17,10 @@ message SubmittedAchievementTest {
   string name = 2;
 }
 
+message ReceivedAchievementTest {
+  string subject = 1;
+}
+
 message EndOfAchievementTest {
   string subject = 1;
 }
