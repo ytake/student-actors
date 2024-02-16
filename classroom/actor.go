@@ -2,10 +2,14 @@ package classroom
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/asynkron/protoactor-go/actor"
-	"github.com/ytake/student-actors/message"
+	"github.com/ytake/student-actors/command"
+	"github.com/ytake/student-actors/event"
 	"github.com/ytake/student-actors/student"
+	"github.com/ytake/student-actors/teacher"
+	"google.golang.org/protobuf/proto"
 )
 
 // Actor represents a classroom
@@ -14,40 +18,50 @@ type Actor struct {
 	teacher       *actor.PID
 	students      []int
 	endOfHomework []string
+	mutex         sync.Mutex
+	state         proto.Message
 }
 
-func NewActor(pipe *actor.PID, teacher *actor.PID, students []int) func() actor.Actor {
+func NewActor(pipe *actor.PID, students []int) func() actor.Actor {
 	return func() actor.Actor {
 		return &Actor{
 			pipe:          pipe,
-			teacher:       teacher,
 			students:      students,
 			endOfHomework: []string{},
+			state:         nil,
 		}
 	}
 }
 
 // Receive is sent messages to be processed from the mailbox associated with the instance of the actor
-func (state *Actor) Receive(context actor.Context) {
+func (class *Actor) Receive(context actor.Context) {
 	switch msg := context.Message().(type) {
-	case *message.BeginClassRequest:
-		context.Request(state.teacher, msg)
-	case *message.AchievementTestRequest:
-		for _, st := range state.students {
-			st, _ := context.SpawnNamed(
+	case *command.ClassStarts:
+		class.teacher = context.Spawn(actor.PropsFromProducer(teacher.NewActor))
+		context.Request(class.teacher, msg)
+
+		class.state = &event.ClassHasStarted{Subject: msg.Subject}
+	case *command.TestBegins:
+		class.mutex.Lock()
+		for _, st := range class.students {
+			sta, _ := context.SpawnNamed(
 				actor.PropsFromProducer(student.NewActor),
 				fmt.Sprintf("student-%d", st))
-			context.Request(st, msg)
+			context.Request(sta, msg)
 		}
-	case *message.SubmittedAchievementTest:
-		endOfHomework := append(state.endOfHomework, msg.Name)
-		if len(endOfHomework) == len(state.students) {
-			context.Request(state.teacher, &message.EndOfAchievementTest{Subject: msg.Subject})
+		class.mutex.Unlock()
+		class.state = &event.TestWasGiven{Subject: msg.Subject}
+	case *command.SubmitTest:
+		endOfHomework := append(class.endOfHomework, msg.Name)
+		if len(endOfHomework) == len(class.students) {
+			class.state = &event.TestReceived{Subject: msg.Subject}
+			context.Request(class.teacher, &command.EndTest{Subject: msg.Subject})
 		} else {
-			state.endOfHomework = endOfHomework
+			class.endOfHomework = endOfHomework
 		}
-	case *message.ReceivedAchievementTest:
-		context.Send(state.pipe, msg)
+	case *command.ReceiveTest:
+		class.state = &event.TestFinished{Subject: msg.Subject}
+		context.Send(class.pipe, class.state)
 		context.Poison(context.Self())
 	}
 }

@@ -4,7 +4,7 @@
 // 	protoc        v3.20.3
 // source: event.proto
 
-package message
+package event
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -20,7 +20,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type BeginClassRequest struct {
+type ClassHasStarted struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -28,8 +28,8 @@ type BeginClassRequest struct {
 	Subject string `protobuf:"bytes,1,opt,name=subject,proto3" json:"subject,omitempty"`
 }
 
-func (x *BeginClassRequest) Reset() {
-	*x = BeginClassRequest{}
+func (x *ClassHasStarted) Reset() {
+	*x = ClassHasStarted{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_event_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -37,13 +37,13 @@ func (x *BeginClassRequest) Reset() {
 	}
 }
 
-func (x *BeginClassRequest) String() string {
+func (x *ClassHasStarted) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BeginClassRequest) ProtoMessage() {}
+func (*ClassHasStarted) ProtoMessage() {}
 
-func (x *BeginClassRequest) ProtoReflect() protoreflect.Message {
+func (x *ClassHasStarted) ProtoReflect() protoreflect.Message {
 	mi := &file_event_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -55,19 +55,19 @@ func (x *BeginClassRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BeginClassRequest.ProtoReflect.Descriptor instead.
-func (*BeginClassRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ClassHasStarted.ProtoReflect.Descriptor instead.
+func (*ClassHasStarted) Descriptor() ([]byte, []int) {
 	return file_event_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *BeginClassRequest) GetSubject() string {
+func (x *ClassHasStarted) GetSubject() string {
 	if x != nil {
 		return x.Subject
 	}
 	return ""
 }
 
-type AchievementTestRequest struct {
+type TestWasGiven struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -75,8 +75,8 @@ type AchievementTestRequest struct {
 	Subject string `protobuf:"bytes,1,opt,name=subject,proto3" json:"subject,omitempty"`
 }
 
-func (x *AchievementTestRequest) Reset() {
-	*x = AchievementTestRequest{}
+func (x *TestWasGiven) Reset() {
+	*x = TestWasGiven{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_event_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -84,13 +84,13 @@ func (x *AchievementTestRequest) Reset() {
 	}
 }
 
-func (x *AchievementTestRequest) String() string {
+func (x *TestWasGiven) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AchievementTestRequest) ProtoMessage() {}
+func (*TestWasGiven) ProtoMessage() {}
 
-func (x *AchievementTestRequest) ProtoReflect() protoreflect.Message {
+func (x *TestWasGiven) ProtoReflect() protoreflect.Message {
 	mi := &file_event_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -102,19 +102,19 @@ func (x *AchievementTestRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AchievementTestRequest.ProtoReflect.Descriptor instead.
-func (*AchievementTestRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use TestWasGiven.ProtoReflect.Descriptor instead.
+func (*TestWasGiven) Descriptor() ([]byte, []int) {
 	return file_event_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *AchievementTestRequest) GetSubject() string {
+func (x *TestWasGiven) GetSubject() string {
 	if x != nil {
 		return x.Subject
 	}
 	return ""
 }
 
-type SubmittedAchievementTest struct {
+type TestSubmitted struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -123,8 +123,8 @@ type SubmittedAchievementTest struct {
 	Name    string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 }
 
-func (x *SubmittedAchievementTest) Reset() {
-	*x = SubmittedAchievementTest{}
+func (x *TestSubmitted) Reset() {
+	*x = TestSubmitted{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_event_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -132,13 +132,13 @@ func (x *SubmittedAchievementTest) Reset() {
 	}
 }
 
-func (x *SubmittedAchievementTest) String() string {
+func (x *TestSubmitted) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SubmittedAchievementTest) ProtoMessage() {}
+func (*TestSubmitted) ProtoMessage() {}
 
-func (x *SubmittedAchievementTest) ProtoReflect() protoreflect.Message {
+func (x *TestSubmitted) ProtoReflect() protoreflect.Message {
 	mi := &file_event_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -150,26 +150,26 @@ func (x *SubmittedAchievementTest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SubmittedAchievementTest.ProtoReflect.Descriptor instead.
-func (*SubmittedAchievementTest) Descriptor() ([]byte, []int) {
+// Deprecated: Use TestSubmitted.ProtoReflect.Descriptor instead.
+func (*TestSubmitted) Descriptor() ([]byte, []int) {
 	return file_event_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *SubmittedAchievementTest) GetSubject() string {
+func (x *TestSubmitted) GetSubject() string {
 	if x != nil {
 		return x.Subject
 	}
 	return ""
 }
 
-func (x *SubmittedAchievementTest) GetName() string {
+func (x *TestSubmitted) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-type ReceivedAchievementTest struct {
+type TestReceived struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -177,8 +177,8 @@ type ReceivedAchievementTest struct {
 	Subject string `protobuf:"bytes,1,opt,name=subject,proto3" json:"subject,omitempty"`
 }
 
-func (x *ReceivedAchievementTest) Reset() {
-	*x = ReceivedAchievementTest{}
+func (x *TestReceived) Reset() {
+	*x = TestReceived{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_event_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -186,13 +186,13 @@ func (x *ReceivedAchievementTest) Reset() {
 	}
 }
 
-func (x *ReceivedAchievementTest) String() string {
+func (x *TestReceived) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ReceivedAchievementTest) ProtoMessage() {}
+func (*TestReceived) ProtoMessage() {}
 
-func (x *ReceivedAchievementTest) ProtoReflect() protoreflect.Message {
+func (x *TestReceived) ProtoReflect() protoreflect.Message {
 	mi := &file_event_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -204,19 +204,19 @@ func (x *ReceivedAchievementTest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ReceivedAchievementTest.ProtoReflect.Descriptor instead.
-func (*ReceivedAchievementTest) Descriptor() ([]byte, []int) {
+// Deprecated: Use TestReceived.ProtoReflect.Descriptor instead.
+func (*TestReceived) Descriptor() ([]byte, []int) {
 	return file_event_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ReceivedAchievementTest) GetSubject() string {
+func (x *TestReceived) GetSubject() string {
 	if x != nil {
 		return x.Subject
 	}
 	return ""
 }
 
-type EndOfAchievementTest struct {
+type TestFinished struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -224,8 +224,8 @@ type EndOfAchievementTest struct {
 	Subject string `protobuf:"bytes,1,opt,name=subject,proto3" json:"subject,omitempty"`
 }
 
-func (x *EndOfAchievementTest) Reset() {
-	*x = EndOfAchievementTest{}
+func (x *TestFinished) Reset() {
+	*x = TestFinished{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_event_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -233,13 +233,13 @@ func (x *EndOfAchievementTest) Reset() {
 	}
 }
 
-func (x *EndOfAchievementTest) String() string {
+func (x *TestFinished) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*EndOfAchievementTest) ProtoMessage() {}
+func (*TestFinished) ProtoMessage() {}
 
-func (x *EndOfAchievementTest) ProtoReflect() protoreflect.Message {
+func (x *TestFinished) ProtoReflect() protoreflect.Message {
 	mi := &file_event_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -251,12 +251,12 @@ func (x *EndOfAchievementTest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use EndOfAchievementTest.ProtoReflect.Descriptor instead.
-func (*EndOfAchievementTest) Descriptor() ([]byte, []int) {
+// Deprecated: Use TestFinished.ProtoReflect.Descriptor instead.
+func (*TestFinished) Descriptor() ([]byte, []int) {
 	return file_event_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *EndOfAchievementTest) GetSubject() string {
+func (x *TestFinished) GetSubject() string {
 	if x != nil {
 		return x.Subject
 	}
@@ -267,27 +267,25 @@ var File_event_proto protoreflect.FileDescriptor
 
 var file_event_proto_rawDesc = []byte{
 	0x0a, 0x0b, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x08, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x22, 0x2d, 0x0a, 0x11, 0x42, 0x65, 0x67, 0x69, 0x6e,
-	0x43, 0x6c, 0x61, 0x73, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x18, 0x0a, 0x07,
-	0x73, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x73,
-	0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x22, 0x32, 0x0a, 0x16, 0x41, 0x63, 0x68, 0x69, 0x65, 0x76,
-	0x65, 0x6d, 0x65, 0x6e, 0x74, 0x54, 0x65, 0x73, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x07, 0x73, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x22, 0x48, 0x0a, 0x18, 0x53, 0x75,
-	0x62, 0x6d, 0x69, 0x74, 0x74, 0x65, 0x64, 0x41, 0x63, 0x68, 0x69, 0x65, 0x76, 0x65, 0x6d, 0x65,
-	0x6e, 0x74, 0x54, 0x65, 0x73, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x62, 0x6a, 0x65, 0x63,
-	0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x73, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74,
-	0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04,
-	0x6e, 0x61, 0x6d, 0x65, 0x22, 0x33, 0x0a, 0x17, 0x52, 0x65, 0x63, 0x65, 0x69, 0x76, 0x65, 0x64,
-	0x41, 0x63, 0x68, 0x69, 0x65, 0x76, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x54, 0x65, 0x73, 0x74, 0x12,
+	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x22, 0x2b, 0x0a, 0x0f, 0x43, 0x6c, 0x61, 0x73, 0x73,
+	0x48, 0x61, 0x73, 0x53, 0x74, 0x61, 0x72, 0x74, 0x65, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75,
+	0x62, 0x6a, 0x65, 0x63, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x73, 0x75, 0x62,
+	0x6a, 0x65, 0x63, 0x74, 0x22, 0x28, 0x0a, 0x0c, 0x54, 0x65, 0x73, 0x74, 0x57, 0x61, 0x73, 0x47,
+	0x69, 0x76, 0x65, 0x6e, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x73, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x22, 0x3d,
+	0x0a, 0x0d, 0x54, 0x65, 0x73, 0x74, 0x53, 0x75, 0x62, 0x6d, 0x69, 0x74, 0x74, 0x65, 0x64, 0x12,
 	0x18, 0x0a, 0x07, 0x73, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x07, 0x73, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x22, 0x30, 0x0a, 0x14, 0x45, 0x6e, 0x64,
-	0x4f, 0x66, 0x41, 0x63, 0x68, 0x69, 0x65, 0x76, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x54, 0x65, 0x73,
-	0x74, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x07, 0x73, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x42, 0x29, 0x5a, 0x27, 0x67,
-	0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x79, 0x74, 0x61, 0x6b, 0x65, 0x2f,
-	0x73, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x2d, 0x61, 0x63, 0x74, 0x6f, 0x72, 0x73, 0x2f, 0x6d,
-	0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x52, 0x07, 0x73, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d,
+	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x28, 0x0a,
+	0x0c, 0x54, 0x65, 0x73, 0x74, 0x52, 0x65, 0x63, 0x65, 0x69, 0x76, 0x65, 0x64, 0x12, 0x18, 0x0a,
+	0x07, 0x73, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07,
+	0x73, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x22, 0x28, 0x0a, 0x0c, 0x54, 0x65, 0x73, 0x74, 0x46,
+	0x69, 0x6e, 0x69, 0x73, 0x68, 0x65, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x62, 0x6a, 0x65,
+	0x63, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x73, 0x75, 0x62, 0x6a, 0x65, 0x63,
+	0x74, 0x42, 0x27, 0x5a, 0x25, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f,
+	0x79, 0x74, 0x61, 0x6b, 0x65, 0x2f, 0x73, 0x74, 0x75, 0x64, 0x65, 0x6e, 0x74, 0x2d, 0x61, 0x63,
+	0x74, 0x6f, 0x72, 0x73, 0x2f, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x33,
 }
 
 var (
@@ -304,11 +302,11 @@ func file_event_proto_rawDescGZIP() []byte {
 
 var file_event_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_event_proto_goTypes = []interface{}{
-	(*BeginClassRequest)(nil),        // 0: protobuf.BeginClassRequest
-	(*AchievementTestRequest)(nil),   // 1: protobuf.AchievementTestRequest
-	(*SubmittedAchievementTest)(nil), // 2: protobuf.SubmittedAchievementTest
-	(*ReceivedAchievementTest)(nil),  // 3: protobuf.ReceivedAchievementTest
-	(*EndOfAchievementTest)(nil),     // 4: protobuf.EndOfAchievementTest
+	(*ClassHasStarted)(nil), // 0: protobuf.ClassHasStarted
+	(*TestWasGiven)(nil),    // 1: protobuf.TestWasGiven
+	(*TestSubmitted)(nil),   // 2: protobuf.TestSubmitted
+	(*TestReceived)(nil),    // 3: protobuf.TestReceived
+	(*TestFinished)(nil),    // 4: protobuf.TestFinished
 }
 var file_event_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -325,7 +323,7 @@ func file_event_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_event_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*BeginClassRequest); i {
+			switch v := v.(*ClassHasStarted); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -337,7 +335,7 @@ func file_event_proto_init() {
 			}
 		}
 		file_event_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AchievementTestRequest); i {
+			switch v := v.(*TestWasGiven); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -349,7 +347,7 @@ func file_event_proto_init() {
 			}
 		}
 		file_event_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SubmittedAchievementTest); i {
+			switch v := v.(*TestSubmitted); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -361,7 +359,7 @@ func file_event_proto_init() {
 			}
 		}
 		file_event_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ReceivedAchievementTest); i {
+			switch v := v.(*TestReceived); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -373,7 +371,7 @@ func file_event_proto_init() {
 			}
 		}
 		file_event_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*EndOfAchievementTest); i {
+			switch v := v.(*TestFinished); i {
 			case 0:
 				return &v.state
 			case 1:

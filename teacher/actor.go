@@ -1,15 +1,11 @@
 package teacher
 
 import (
-	"fmt"
-
 	"github.com/asynkron/protoactor-go/actor"
-	"github.com/ytake/student-actors/message"
+	"github.com/ytake/student-actors/command"
 )
 
-type Actor struct {
-	isError bool
-}
+type Actor struct{}
 
 func NewActor() actor.Actor {
 	return &Actor{}
@@ -19,18 +15,16 @@ func NewActor() actor.Actor {
 func (a *Actor) Receive(ctx actor.Context) {
 	switch msg := ctx.Message().(type) {
 	case *actor.Restarting:
-		fmt.Println("先生が復活しました")
-	case *message.BeginClassRequest:
+		ctx.Logger().Info("先生が復活しました")
+	case *command.ClassStarts:
 		// 先生が宿題を出す
-		fmt.Println("先生が授業に参加している生徒にテストを出しました")
-		ctx.Respond(&message.AchievementTestRequest{Subject: msg.Subject})
+		ctx.Logger().Info("先生が", msg.Subject, "テストを出しました")
+		ctx.Respond(&command.TestBegins{Subject: msg.Subject})
 		// 宿題を提出した後に先生アクターを意図的にパニックさせる
-		a.isError = true
 		panic("teacher panic")
-	case *message.EndOfAchievementTest:
+	case *command.EndTest:
 		// panic後復活した先生がテストの解答を受け取る
-		// 全員がテストの解答を提出した
-		fmt.Println("先生が", msg.Subject, "テストの解答を受け取りました")
-		ctx.Respond(&message.ReceivedAchievementTest{Subject: msg.Subject})
+		ctx.Logger().Info("先生が", msg.Subject, "テストの解答を受け取りました")
+		ctx.Respond(&command.ReceiveTest{Subject: msg.Subject})
 	}
 }

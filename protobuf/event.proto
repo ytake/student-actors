@@ -2,25 +2,25 @@ syntax = "proto3";
 
 package protobuf;
 
-option go_package = "github.com/ytake/student-actors/message";
+option go_package = "github.com/ytake/student-actors/event";
 
-message BeginClassRequest {
+message ClassHasStarted {
   string subject = 1;
 }
 
-message AchievementTestRequest {
+message TestWasGiven {
   string subject = 1;
 }
 
-message SubmittedAchievementTest {
+message TestSubmitted {
   string subject = 1;
   string name = 2;
 }
 
-message ReceivedAchievementTest {
+message TestReceived {
   string subject = 1;
 }
 
-message EndOfAchievementTest {
+message TestFinished {
   string subject = 1;
 }

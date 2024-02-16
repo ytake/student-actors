@@ -6,23 +6,21 @@ import (
 	"github.com/asynkron/protoactor-go/actor"
 	"github.com/asynkron/protoactor-go/stream"
 	"github.com/ytake/student-actors/classroom"
-	"github.com/ytake/student-actors/message"
-	"github.com/ytake/student-actors/teacher"
+	"github.com/ytake/student-actors/command"
+	"github.com/ytake/student-actors/event"
 )
 
 func main() {
 	system := actor.NewActorSystem()
 	system.Root.ActorSystem()
 
-	th := system.Root.Spawn(actor.PropsFromProducer(teacher.NewActor))
-
-	p := stream.NewTypedStream[*message.ReceivedAchievementTest](system)
+	p := stream.NewTypedStream[*event.TestFinished](system)
 	go func() {
 		cr, _ := system.Root.SpawnNamed(
 			actor.PropsFromProducer(
-				classroom.NewActor(p.PID(), th, students())),
+				classroom.NewActor(p.PID(), students())),
 			"math-classroom")
-		system.Root.Send(cr, &message.BeginClassRequest{Subject: "算数"})
+		system.Root.Send(cr, &command.ClassStarts{Subject: "算数"})
 	}()
 	r := <-p.C()
 	fmt.Printf("%s テストが終了しました\n", r.Subject)
