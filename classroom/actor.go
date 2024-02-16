@@ -12,7 +12,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-// Actor represents a classroom
+// Actor represents a classroom.
 type Actor struct {
 	pipe          *actor.PID
 	teacher       *actor.PID
@@ -33,7 +33,7 @@ func NewActor(pipe *actor.PID, students []int) func() actor.Actor {
 	}
 }
 
-// Receive is sent messages to be processed from the mailbox associated with the instance of the actor
+// Receive is sent messages to be processed from the mailbox associated with the instance of the actor.
 func (class *Actor) Receive(context actor.Context) {
 	switch msg := context.Message().(type) {
 	case *command.ClassStarts:
@@ -44,9 +44,12 @@ func (class *Actor) Receive(context actor.Context) {
 	case *command.TestBegins:
 		class.mutex.Lock()
 		for _, st := range class.students {
-			sta, _ := context.SpawnNamed(
+			sta, err := context.SpawnNamed(
 				actor.PropsFromProducer(student.NewActor),
 				fmt.Sprintf("student-%d", st))
+			if err != nil {
+				context.Poison(context.Self())
+			}
 			context.Request(sta, msg)
 		}
 		class.mutex.Unlock()

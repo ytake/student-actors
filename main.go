@@ -15,11 +15,14 @@ func main() {
 	system.Root.ActorSystem()
 
 	p := stream.NewTypedStream[*event.TestFinished](system)
+	cr, err := system.Root.SpawnNamed(
+		actor.PropsFromProducer(
+			classroom.NewActor(p.PID(), students())),
+		"math-classroom")
+	if err != nil {
+		return
+	}
 	go func() {
-		cr, _ := system.Root.SpawnNamed(
-			actor.PropsFromProducer(
-				classroom.NewActor(p.PID(), students())),
-			"math-classroom")
 		system.Root.Send(cr, &command.ClassStarts{Subject: "算数"})
 	}()
 	r := <-p.C()
@@ -27,9 +30,9 @@ func main() {
 }
 
 func students() []int {
-	var students []int
-	for v := range [20]int{} {
-		students = append(students, v+1)
+	sts := make([]int, 20)
+	for i := 0; i < 20; i++ {
+		sts[i] = i
 	}
-	return students
+	return sts
 }

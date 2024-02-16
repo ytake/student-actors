@@ -9,8 +9,7 @@ import (
 	"github.com/ytake/student-actors/command"
 )
 
-type Actor struct {
-}
+type Actor struct{}
 
 func NewActor() actor.Actor {
 	return &Actor{}
