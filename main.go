@@ -12,8 +12,6 @@ import (
 
 func main() {
 	system := actor.NewActorSystem()
-	system.Root.ActorSystem()
-
 	p := stream.NewTypedStream[*event.TestFinished](system)
 	cr, err := system.Root.SpawnNamed(
 		actor.PropsFromProducer(
