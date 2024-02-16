@@ -19,8 +19,9 @@ func NewActor() actor.Actor {
 func (a *Actor) Receive(ctx actor.Context) {
 	switch msg := ctx.Message().(type) {
 	case *command.TestBegins:
-		// ランダムで解答時間を設定する
-		randTime := rand.Intn(10-1) + 1
+		// ランダムで解答時間を1-9秒で設定する
+		randTime := rand.Intn(9) + 1
+		fmt.Println(randTime)
 		time.Sleep(time.Duration(randTime) * time.Second)
 		// 生徒がテストの問題を解く
 		ctx.Logger().Info(fmt.Sprintf("%s が %s テストの解答を提出しました", ctx.Self().Id, msg.Subject))
