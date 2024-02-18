@@ -8,6 +8,7 @@ import (
 
 	"github.com/asynkron/protoactor-go/actor"
 	"github.com/ytake/student-actors/command"
+	"github.com/ytake/student-actors/event"
 )
 
 func TestActor_Receive(t *testing.T) {
@@ -20,7 +21,7 @@ func TestActor_Receive(t *testing.T) {
 		{
 			name:    "test start",
 			msg:     &command.ClassStarts{Subject: "math"},
-			want:    &command.TestBegins{Subject: "math"},
+			want:    &event.TestStarted{Subject: "math"},
 			isError: false,
 		},
 		{
@@ -55,13 +56,13 @@ func TestActor_Receive_panic(t *testing.T) {
 	// その後に先生アクターを意図的にパニックが発生する
 	system.Root.Send(pid, &command.ClassStarts{Subject: "math"})
 	// 先生アクターがパニックした後に復活し、テストの解答を受け取る
-	f := system.Root.RequestFuture(pid, &command.EndTest{Subject: "math"}, 3*time.Second)
+	f := system.Root.RequestFuture(pid, &event.TestFinished{Subject: "math"}, 3*time.Second)
 	r, err := f.Result()
 	if err != nil {
 		t.Error(err)
 	}
 	// テストの解答を受け取っていることを確認
-	if !reflect.DeepEqual(r, &command.ReceiveTest{Subject: "math"}) {
-		t.Errorf("got: %v, want: %v", r, &command.ReceiveTest{Subject: "math"})
+	if !reflect.DeepEqual(r, &event.TestReceived{Subject: "math"}) {
+		t.Errorf("got: %v, want: %v", r, &event.TestReceived{Subject: "math"})
 	}
 }

@@ -4,11 +4,11 @@ package protobuf;
 
 option go_package = "github.com/ytake/student-actors/event";
 
-message ClassHasStarted {
+message ClassStarted {
   string subject = 1;
 }
 
-message TestWasGiven {
+message TestStarted {
   string subject = 1;
 }
 
@@ -22,5 +22,9 @@ message TestReceived {
 }
 
 message TestFinished {
+  string subject = 1;
+}
+
+message ClassFinished {
   string subject = 1;
 }

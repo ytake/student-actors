@@ -12,7 +12,7 @@ import (
 
 func main() {
 	system := actor.NewActorSystem()
-	p := stream.NewTypedStream[*event.TestFinished](system)
+	p := stream.NewTypedStream[*event.ClassFinished](system)
 	cr, err := system.Root.SpawnNamed(
 		actor.PropsFromProducer(
 			classroom.NewActor(p.PID(), students())),

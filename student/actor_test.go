@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/asynkron/protoactor-go/actor"
-	"github.com/ytake/student-actors/command"
+	"github.com/ytake/student-actors/event"
 )
 
 func TestActor_Receive(t *testing.T) {
@@ -19,8 +19,8 @@ func TestActor_Receive(t *testing.T) {
 	}{
 		{
 			name:    "test start",
-			msg:     &command.TestBegins{Subject: "math"},
-			want:    &command.SubmitTest{Subject: "math", Name: "student"},
+			msg:     &event.TestStarted{Subject: "math"},
+			want:    &event.TestSubmitted{Subject: "math", Name: "student"},
 			isError: false,
 		},
 		{
@@ -37,7 +37,7 @@ func TestActor_Receive(t *testing.T) {
 			f := system.Root.RequestFuture(pid, tt.msg, 10*time.Second)
 			r, err := f.Result()
 			if tt.isError {
-				if !errors.Is(err, actor.ErrTimeout) {
+				if !errors.Is(err, actor.ErrDeadLetter) {
 					t.Error(err)
 				}
 			}

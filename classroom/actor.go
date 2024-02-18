@@ -40,8 +40,9 @@ func (class *Actor) Receive(context actor.Context) {
 		class.teacher = context.Spawn(actor.PropsFromProducer(teacher.NewActor))
 		context.Request(class.teacher, msg)
 
-		class.state = &event.ClassHasStarted{Subject: msg.Subject}
-	case *command.TestBegins:
+		class.state = &event.ClassStarted{Subject: msg.Subject}
+	case *event.TestStarted:
+		class.state = msg
 		class.mutex.Lock()
 		for _, st := range class.students {
 			sta, err := context.SpawnNamed(
@@ -53,17 +54,16 @@ func (class *Actor) Receive(context actor.Context) {
 			context.Request(sta, msg)
 		}
 		class.mutex.Unlock()
-		class.state = &event.TestWasGiven{Subject: msg.Subject}
-	case *command.SubmitTest:
+	case *event.TestSubmitted:
+		class.state = msg
 		endOfHomework := append(class.endOfHomework, msg.Name)
 		if len(endOfHomework) == len(class.students) {
-			class.state = &event.TestReceived{Subject: msg.Subject}
-			context.Request(class.teacher, &command.EndTest{Subject: msg.Subject})
+			context.Request(class.teacher, &event.TestFinished{Subject: msg.Subject})
 		} else {
 			class.endOfHomework = endOfHomework
 		}
-	case *command.ReceiveTest:
-		class.state = &event.TestFinished{Subject: msg.Subject}
+	case *event.TestReceived:
+		class.state = &event.ClassFinished{Subject: msg.Subject}
 		context.Send(class.pipe, class.state)
 		context.Poison(context.Self())
 	}
