@@ -21,7 +21,7 @@ func main() {
 		return
 	}
 	go func() {
-		system.Root.Send(cr, &command.ClassStarts{Subject: "算数"})
+		system.Root.Send(cr, &command.StartsClass{Subject: "算数"})
 	}()
 	r := <-p.C()
 	fmt.Printf("%s テストが終了しました\n", r.Subject)

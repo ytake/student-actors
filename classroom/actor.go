@@ -31,7 +31,7 @@ func NewActor(pipe *actor.PID, students []int) func() actor.Actor {
 // Receive is sent messages to be processed from the mailbox associated with the instance of the actor.
 func (class *Actor) Receive(context actor.Context) {
 	switch msg := context.Message().(type) {
-	case *command.ClassStarts:
+	case *command.StartsClass:
 		class.teacher = context.Spawn(actor.PropsFromProducer(teacher.NewActor))
 		context.Request(class.teacher, &command.PrepareTest{Subject: msg.Subject, Students: class.students})
 	case *command.StartTest:

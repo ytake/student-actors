@@ -1,6 +1,6 @@
 package command
 
-type ClassStarts struct {
+type StartsClass struct {
 	Subject string
 }
 
@@ -16,10 +16,6 @@ type StartTest struct {
 type SubmitTest struct {
 	Subject string
 	Name    string
-}
-
-type ReceiveTest struct {
-	Subject string
 }
 
 type FinishTest struct {
