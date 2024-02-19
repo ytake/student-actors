@@ -9,26 +9,21 @@ import (
 	"github.com/ytake/student-actors/event"
 	"github.com/ytake/student-actors/student"
 	"github.com/ytake/student-actors/teacher"
-	"google.golang.org/protobuf/proto"
 )
 
 // Actor represents a classroom.
 type Actor struct {
-	pipe          *actor.PID
-	teacher       *actor.PID
-	students      []int
-	endOfHomework []string
-	mutex         sync.Mutex
-	state         proto.Message
+	pipe     *actor.PID
+	teacher  *actor.PID
+	students []int
+	mutex    sync.Mutex
 }
 
 func NewActor(pipe *actor.PID, students []int) func() actor.Actor {
 	return func() actor.Actor {
 		return &Actor{
-			pipe:          pipe,
-			students:      students,
-			endOfHomework: []string{},
-			state:         nil,
+			pipe:     pipe,
+			students: students,
 		}
 	}
 }
@@ -38,11 +33,8 @@ func (class *Actor) Receive(context actor.Context) {
 	switch msg := context.Message().(type) {
 	case *command.ClassStarts:
 		class.teacher = context.Spawn(actor.PropsFromProducer(teacher.NewActor))
-		context.Request(class.teacher, msg)
-
-		class.state = &event.ClassStarted{Subject: msg.Subject}
-	case *event.TestStarted:
-		class.state = msg
+		context.Request(class.teacher, &command.PrepareTest{Subject: msg.Subject, Students: class.students})
+	case *command.StartTest:
 		class.mutex.Lock()
 		for _, st := range class.students {
 			sta, err := context.SpawnNamed(
@@ -54,17 +46,13 @@ func (class *Actor) Receive(context actor.Context) {
 			context.Request(sta, msg)
 		}
 		class.mutex.Unlock()
-	case *event.TestSubmitted:
-		class.state = msg
-		endOfHomework := append(class.endOfHomework, msg.Name)
-		if len(endOfHomework) == len(class.students) {
-			context.Request(class.teacher, &event.TestFinished{Subject: msg.Subject})
-		} else {
-			class.endOfHomework = endOfHomework
-		}
-	case *event.TestReceived:
-		class.state = &event.ClassFinished{Subject: msg.Subject}
-		context.Send(class.pipe, class.state)
+	case *command.SubmitTest:
+		// 注意 context.Forward(class.teacher)
+		// forwardとの違いは、メッセージを受け取ったアクターがメッセージをそのまま転送することです。
+		// 転送された場合、メッセージの送信元は変更されないため送信元の生徒に直接返信することができます。
+		context.Request(class.teacher, msg)
+	case *command.FinishTest:
+		context.Send(class.pipe, &event.ClassFinished{Subject: msg.Subject})
 		context.Poison(context.Self())
 	}
 }

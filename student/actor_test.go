@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/asynkron/protoactor-go/actor"
-	"github.com/ytake/student-actors/event"
+	"github.com/ytake/student-actors/command"
 )
 
 func TestActor_Receive(t *testing.T) {
@@ -19,8 +19,8 @@ func TestActor_Receive(t *testing.T) {
 	}{
 		{
 			name:    "test start",
-			msg:     &event.TestStarted{Subject: "math"},
-			want:    &event.TestSubmitted{Subject: "math", Name: "student"},
+			msg:     &command.StartTest{Subject: "math"},
+			want:    &command.SubmitTest{Subject: "math", Name: "student"},
 			isError: false,
 		},
 		{

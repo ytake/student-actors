@@ -8,7 +8,6 @@ import (
 
 	"github.com/asynkron/protoactor-go/actor"
 	"github.com/ytake/student-actors/command"
-	"github.com/ytake/student-actors/event"
 )
 
 func TestActor_Receive(t *testing.T) {
@@ -20,8 +19,8 @@ func TestActor_Receive(t *testing.T) {
 	}{
 		{
 			name:    "test start",
-			msg:     &command.ClassStarts{Subject: "math"},
-			want:    &event.TestStarted{Subject: "math"},
+			msg:     &command.PrepareTest{Subject: "math", Students: []int{1}},
+			want:    &command.StartTest{Subject: "math"},
 			isError: false,
 		},
 		{
@@ -49,20 +48,19 @@ func TestActor_Receive(t *testing.T) {
 	}
 }
 
-func TestActor_Receive_panic(t *testing.T) {
+func TestActor_Respond_FinishTest(t *testing.T) {
 	system := actor.NewActorSystem()
 	pid, _ := system.Root.SpawnNamed(actor.PropsFromProducer(NewActor), "teacher")
 	// 授業開始時に先生が宿題を出す
-	// その後に先生アクターを意図的にパニックが発生する
-	system.Root.Send(pid, &command.ClassStarts{Subject: "math"})
-	// 先生アクターがパニックした後に復活し、テストの解答を受け取る
-	f := system.Root.RequestFuture(pid, &event.TestFinished{Subject: "math"}, 3*time.Second)
+	system.Root.Send(pid, &command.PrepareTest{Subject: "math", Students: []int{1}})
+	f := system.Root.RequestFuture(pid, &command.SubmitTest{Subject: "math", Name: "ytake"}, 3*time.Second)
 	r, err := f.Result()
 	if err != nil {
 		t.Error(err)
 	}
 	// テストの解答を受け取っていることを確認
-	if !reflect.DeepEqual(r, &event.TestReceived{Subject: "math"}) {
-		t.Errorf("got: %v, want: %v", r, &event.TestReceived{Subject: "math"})
+	expect := &command.FinishTest{Subject: "math"}
+	if !reflect.DeepEqual(r, expect) {
+		t.Errorf("got: %v, want: %v", r, expect)
 	}
 }

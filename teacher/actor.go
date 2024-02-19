@@ -3,29 +3,34 @@ package teacher
 import (
 	"github.com/asynkron/protoactor-go/actor"
 	"github.com/ytake/student-actors/command"
-	"github.com/ytake/student-actors/event"
 )
 
-type Actor struct{}
+type Actor struct {
+	students   []int
+	endOfTests []command.SubmitTest
+}
 
 func NewActor() actor.Actor {
-	return &Actor{}
+	return &Actor{
+		students:   []int{},
+		endOfTests: []command.SubmitTest{},
+	}
 }
 
 // Receive is sent messages to be processed from the mailbox associated with the instance of the actor
-func (a *Actor) Receive(ctx actor.Context) {
-	switch msg := ctx.Message().(type) {
-	case *actor.Restarting:
-		ctx.Logger().Info("先生が復活しました")
-	case *command.ClassStarts:
+func (a *Actor) Receive(context actor.Context) {
+	switch msg := context.Message().(type) {
+	case *command.PrepareTest:
+		a.students = msg.Students
 		// 先生が宿題を出す
-		ctx.Logger().Info("先生が", msg.Subject, "テストを出しました")
-		ctx.Respond(&event.TestStarted{Subject: msg.Subject})
-		// 宿題を提出した後に先生アクターを意図的にパニックさせる
-		panic("teacher panic")
-	case *event.TestFinished:
-		// panic後復活した先生がテストの解答を受け取る
-		ctx.Logger().Info("先生が", msg.Subject, "テストの解答を受け取りました")
-		ctx.Respond(&event.TestReceived{Subject: msg.Subject})
+		context.Logger().Info("先生が", msg.Subject, "テストを出しました")
+		context.Respond(&command.StartTest{Subject: msg.Subject})
+		// 生徒がテストを提出する
+	case *command.SubmitTest:
+		a.endOfTests = append(a.endOfTests, *msg)
+		// 全員提出したら先生がテストの解答を受け取る
+		if len(a.endOfTests) == len(a.students) {
+			context.Respond(&command.FinishTest{Subject: msg.Subject})
+		}
 	}
 }
