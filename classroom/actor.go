@@ -1,8 +1,6 @@
 package classroom
 
 import (
-	"sync"
-
 	"github.com/asynkron/protoactor-go/actor"
 	"github.com/ytake/student-actors/command"
 	"github.com/ytake/student-actors/event"
@@ -14,7 +12,6 @@ type Actor struct {
 	pipe     *actor.PID
 	teacher  *actor.PID
 	students []int
-	mutex    sync.Mutex
 }
 
 func NewActor(pipe *actor.PID, students []int) func() actor.Actor {
