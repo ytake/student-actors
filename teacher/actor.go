@@ -2,7 +2,6 @@ package teacher
 
 import (
 	"fmt"
-	"sync"
 
 	"github.com/asynkron/protoactor-go/actor"
 	"github.com/ytake/student-actors/command"
@@ -13,7 +12,6 @@ type Actor struct {
 	students   []int
 	endOfTests []command.SubmitTest
 	replyTo    *actor.PID
-	mutex      sync.Mutex
 }
 
 func NewActor(students []int, replyTo *actor.PID) actor.Actor {
@@ -27,20 +25,21 @@ func NewActor(students []int, replyTo *actor.PID) actor.Actor {
 // Receive is sent messages to be processed from the mailbox associated with the instance of the actor
 func (a *Actor) Receive(context actor.Context) {
 	switch msg := context.Message().(type) {
+	case *actor.Restarting:
+		// リスタート時に実行される
+		context.Send(context.Self(), &command.PrepareTest{Subject: "math"})
 	case *command.PrepareTest:
-		// 先生が宿題を出す
 		context.Logger().Info("先生が", msg.Subject, "テストを出しました")
-		a.mutex.Lock()
 		for _, st := range a.students {
 			sta, err := context.SpawnNamed(
 				actor.PropsFromProducer(student.NewActor),
 				fmt.Sprintf("student-%d", st))
 			if err != nil {
-				context.Poison(context.Self())
+				context.Logger().Error(fmt.Sprintf("生徒 %d 生成できませんでした", st))
+				panic(err)
 			}
 			context.Send(sta, &command.StartTest{Subject: msg.Subject})
 		}
-		a.mutex.Unlock()
 		// 生徒がテストを提出する
 	case *command.SubmitTest:
 		context.Logger().Info(
