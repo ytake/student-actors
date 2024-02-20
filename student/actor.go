@@ -23,8 +23,9 @@ func (a *Actor) Receive(context actor.Context) {
 		randTime := rand.Intn(9) + 1
 		time.Sleep(time.Duration(randTime) * time.Second)
 		// 生徒がテストの問題を解く
-		context.Logger().Info(fmt.Sprintf("%s が %s テストの解答を提出しました", context.Self().GetId(), msg.Subject))
-		context.Respond(&command.SubmitTest{Subject: msg.Subject, Name: context.Self().GetId()})
+		context.Logger().Info(
+			fmt.Sprintf("%s が %s テストの解答を提出します", context.Self().GetId(), msg.Subject))
+		context.Send(context.Parent(), &command.SubmitTest{Subject: msg.Subject, Name: context.Self().GetId()})
 		context.Poison(context.Self())
 	}
 }

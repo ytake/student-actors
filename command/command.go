@@ -5,8 +5,7 @@ type StartsClass struct {
 }
 
 type PrepareTest struct {
-	Subject  string
-	Students []int
+	Subject string
 }
 
 type StartTest struct {
