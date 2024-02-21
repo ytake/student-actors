@@ -9,15 +9,15 @@ import (
 
 // Actor represents a classroom.
 type Actor struct {
-	pipe     *actor.PID
+	stream   *actor.PID
 	teacher  *actor.PID
 	students []int
 }
 
-func NewActor(pipe *actor.PID, students []int) func() actor.Actor {
+func NewActor(stream *actor.PID, students []int) func() actor.Actor {
 	return func() actor.Actor {
 		return &Actor{
-			pipe:     pipe,
+			stream:   stream,
 			students: students,
 		}
 	}
@@ -30,9 +30,9 @@ func (class *Actor) Receive(context actor.Context) {
 		class.teacher = context.Spawn(actor.PropsFromProducer(func() actor.Actor {
 			return teacher.NewActor(class.students, context.Self())
 		}))
-		context.Request(class.teacher, &command.PrepareTest{Subject: msg.Subject})
+		context.Send(class.teacher, &command.PrepareTest{Subject: msg.Subject})
 	case *command.FinishTest:
-		context.Send(class.pipe, &event.ClassFinished{Subject: msg.Subject})
+		context.Send(class.stream, &event.ClassFinished{Subject: msg.Subject})
 		context.Poison(context.Self())
 	}
 }
