@@ -10,7 +10,6 @@ import (
 // Actor represents a classroom.
 type Actor struct {
 	stream   *actor.PID
-	teacher  *actor.PID
 	students []int
 }
 
@@ -27,10 +26,10 @@ func NewActor(stream *actor.PID, students []int) func() actor.Actor {
 func (class *Actor) Receive(context actor.Context) {
 	switch msg := context.Message().(type) {
 	case *command.StartsClass:
-		class.teacher = context.Spawn(actor.PropsFromProducer(func() actor.Actor {
+		pid := context.Spawn(actor.PropsFromProducer(func() actor.Actor {
 			return teacher.NewActor(class.students, context.Self())
 		}))
-		context.Send(class.teacher, &command.PrepareTest{Subject: msg.Subject})
+		context.Send(pid, &command.PrepareTest{Subject: msg.Subject})
 	case *command.FinishTest:
 		context.Send(class.stream, &event.ClassFinished{Subject: msg.Subject})
 		context.Poison(context.Self())
